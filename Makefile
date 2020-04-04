@@ -1,6 +1,6 @@
 BUILD=ssaplayground
 all:
-	go build -o $(BUILD)
+	go build -o $(BUILD) -mod vendor
 start:
 	./ssaplayground -conf config.yaml
 docker:
