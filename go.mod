@@ -1,4 +1,4 @@
-module github.com/changkun/gossafunc
+module github.com/changkun/ssaplayground
 
 go 1.14
 

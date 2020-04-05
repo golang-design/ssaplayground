@@ -1,6 +1,6 @@
 package main
 
-import "github.com/changkun/gossafunc/src/boot"
+import "github.com/changkun/ssaplayground/src/boot"
 
 func main() {
 	boot.Run()

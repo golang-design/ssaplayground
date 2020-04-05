@@ -24,10 +24,10 @@ func Get() *Config {
 }
 
 func Init() {
-	c := flag.String("conf", "", "path to the gossaweb config file")
+	c := flag.String("conf", "", "path to the ssaplayground config file")
 	usage := func() {
 		fmt.Fprintf(os.Stderr, `
-GOSSAWEB is a web service for exploring Go's SSA intermediate representation.
+SSAPLAYGROUND is a web service for exploring Go's SSA intermediate representation.
 Usage:
 `)
 		flag.PrintDefaults()

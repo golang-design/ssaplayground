@@ -6,7 +6,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/changkun/gossafunc/src/config"
+	"github.com/changkun/ssaplayground/src/config"
 	"github.com/gin-gonic/gin"
 )
 

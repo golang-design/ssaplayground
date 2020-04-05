@@ -13,7 +13,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/changkun/gossafunc/src/config"
+	"github.com/changkun/ssaplayground/src/config"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
