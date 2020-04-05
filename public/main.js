@@ -43,7 +43,7 @@ function build() {
         });
     })
     .then(res => {
-        ssabox.src = `./buildbox/${res.data.build_id}/ssa.html`
+        ssabox.src = `/gossa/buildbox/${res.data.build_id}/ssa.html`
         msgbox.innerText = ''
     })
     .catch(res => {
@@ -57,7 +57,7 @@ let ssablock = document.getElementById('ssa')
 ssablock.addEventListener('load', () => {
     // wait until ssa is loaded
     let $head = $("iframe").contents().find("head");
-    $head.append($("<link/>", { rel: "stylesheet", href: "/scrollbar.css", type: "text/css"}));
+    $head.append($("<link/>", { rel: "stylesheet", href: "/gossa/scrollbar.css", type: "text/css"}));
 })
 
 // inject version info

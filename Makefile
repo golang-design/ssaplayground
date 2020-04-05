@@ -1,4 +1,4 @@
-BUILD=ssaplayground
+BUILD=ssaplayground.out
 all:
 	go build -o $(BUILD) -mod vendor
 start:

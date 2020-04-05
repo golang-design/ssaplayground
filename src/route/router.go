@@ -36,7 +36,7 @@ func (r *Router) SetupAPI() {
 }
 
 func (r *Router) SetupApp() {
-	r.Engine.Use(static("/"))
+	r.Engine.Use(static("/gossa"))
 	logrus.Infof("GoSSAWeb is on: http://%s, static: %s", config.Get().Addr, config.Get().Static)
 }
 

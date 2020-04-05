@@ -1,4 +1,4 @@
 ---
 addr: localhost:6789
 mode: debug
-static: ./public
+static: public
