@@ -11,8 +11,8 @@ let msgbox = document.getElementById('outputMsg')
 let ssabox = document.getElementById('ssa')
 ssabox.addEventListener('load', () => {
     // inject ssa style
-    let $head = $("iframe").contents().find("head");
-    $head.append($("<link/>", { rel: "stylesheet", href: "/gossa/scrollbar.css", type: "text/css"}));
+    let head = $("iframe").contents().find("head");
+    head.append($("<link/>", { rel: 'stylesheet', href: '/gossa/scrollbar.css', type: 'text/css'}));
     setMessageBox('', true)
 });
 

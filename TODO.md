@@ -2,7 +2,7 @@
 
 - [x] Test package support
 - [x] Auto format && import
-- [x] Dark mode
+- [x] ~~Dark mode~~ Doesn't work for dynamic iframe
 - [x] Message: waiting for SSA response
 - [ ] Dragable SSA
 - [ ] Compiler flags, e.g. disable

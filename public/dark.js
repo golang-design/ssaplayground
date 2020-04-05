@@ -1,3 +1,6 @@
+document.getElementById('dark-mode-checkbox').onchange = () => {
+  darkmode()
+}
 var enabled = localStorage.getItem('dark-mode')
 if (enabled === null) {
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -7,7 +10,7 @@ if (enabled === null) {
   enable(); document.getElementById("dark-mode-checkbox").checked = true;
 }
 function enable()  {
-  DarkReader.enable({brightness: 100, contrast: 85, sepia: 10});
+  DarkReader.enable({brightness: 100, contrast: 85, sepia: 10}, null, true);
   localStorage.setItem('dark-mode', 'true');
 }
 function disable() {
@@ -15,6 +18,5 @@ function disable() {
   localStorage.setItem('dark-mode', 'false')
 }
 function darkmode() {
-  console
   if (localStorage.getItem('dark-mode') === 'false') { enable(); } else { disable();}
 }
