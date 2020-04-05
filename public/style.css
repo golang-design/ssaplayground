@@ -51,8 +51,8 @@ body {
 	margin-bottom: 1em;
 }
 
-#funcname {
-	width: 200px;
+#funcname,#gcflags {
+	width: 150px;
 	padding: 6px 12px;
 	font-size: 14px;
 	color: #555;
@@ -95,9 +95,12 @@ input[type=button]:focus {
     padding: 10px;
 	background: rgba(255, 252, 221, 0.81);
 }
-#code, #output, pre, .lines {
+#code, #output, pre, .lines, #controls span {
 	font-family: Menlo, monospace;
 	font-size: 11pt;
+}
+#controls span {
+	margin: 0 5px;
 }
 #output {
     flex: 70%;

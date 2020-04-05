@@ -4,9 +4,9 @@
 - [x] Auto format && import
 - [x] ~~Dark mode~~ Doesn't work for dynamic iframe
 - [x] Message: waiting for SSA response
-- [ ] Dragable SSA
-- [ ] Compiler flags, e.g. disable
-- [ ] More environment variable support, need investigation
-- [ ] Use short link instead of UUID
+- [x] ~~Dragable SSA~~ Doesn't work for dynamic iframe
+- [x] Compiler flags, -gcflags="-N -l"
+- [x] ~~Use short link instead of UUID?~~ seems no need
+- [x] share with /gossa?id=uuid -> access /gossa/uuid/main.go or /gossa/uuid/main_test.go, access /gossa/uuid/ssa.html
+- [x] ~~Better Editor: Monaco Editor~~ maybe not?
 - [ ] Containerized deployment
-- [ ] Better Editor: Monaco Editor

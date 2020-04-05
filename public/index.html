@@ -15,8 +15,11 @@
         <div id="banner">
             <div id="head" itemprop="name">The Go SSA Playground</div>
             <div id="controls" class="form-inline">
-                <input class="form-control" type="text" value="" placeholder="GOSSAFUNC" id="funcname">
-                <input class="btn btn-primary" type="button" value="Build" id="build">
+                <input type="button" value="Build" id="build">
+                <span>GOSSAFUNC=</span>
+                <input type="text" value="" placeholder="Function name" id="funcname">
+                <span>-gcflags=</span>
+                <input type="text" value="" placeholder="e.g. -N -l" id="gcflags">
             </div>
             <div id="aboutControls">
                 <!-- doesn't work for iframe -->
@@ -24,7 +27,7 @@
                     <input id="dark-mode-checkbox" type="checkbox">
                     <span class="slider"></span>
                 </label> -->
-                <input class="btn btn-primary" type="button" value="About" id="aboutbtn">
+                <input type="button" value="About" id="aboutbtn">
             </div>
         </div>
         <div id="main">
@@ -53,7 +56,7 @@
             </div>
     </div>
     <script src="/gossa/main.js"></script>
-    <script src="/gossa/magic.js"></script>
-    <script src="/gossa/dark.js"></script>
+    <!-- <script src="/gossa/magic.js"></script>
+    <script src="/gossa/dark.js"></script> -->
 </body>
 </html>

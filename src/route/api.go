@@ -38,6 +38,7 @@ func Pong(c *gin.Context) {
 
 type BuildSSAInput struct {
 	FuncName string `json:"funcname"`
+	GcFlags  string `json:"gcflags"`
 	Code     string `json:"code"`
 }
 type BuildSSAOutput struct {
@@ -99,7 +100,7 @@ func BuildSSA(c *gin.Context) {
 		return
 	}
 	outFile := filepath.Join(path, "/main.out")
-	err = buildSSA(in.FuncName, outFile, buildFile, isTest)
+	err = buildSSA(in.FuncName, in.GcFlags, outFile, buildFile, isTest)
 	if err != nil {
 		os.Remove(path)
 		out.Msg = err.Error()
@@ -137,12 +138,12 @@ func autoimports(outf string) error {
 	return nil
 }
 
-func buildSSA(funcname, outf, buildf string, isTest bool) error {
+func buildSSA(funcname, gcflags, outf, buildf string, isTest bool) error {
 	var cmd *exec.Cmd
 	if !isTest {
-		cmd = exec.Command("go", "build", "-o", outf, buildf)
+		cmd = exec.Command("go", "build", fmt.Sprintf(`-gcflags=%s`, gcflags), "-o", outf, buildf)
 	} else {
-		cmd = exec.Command("go", "test", buildf)
+		cmd = exec.Command("go", "test", fmt.Sprintf(`-gcflags=%s`, gcflags), buildf)
 	}
 	cmd.Env = append(os.Environ(), fmt.Sprintf("GOSSAFUNC=%s", funcname))
 	cmd.Stderr = &bytes.Buffer{}

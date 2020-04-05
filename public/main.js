@@ -11,18 +11,18 @@ let msgbox = document.getElementById('outputMsg')
 let ssabox = document.getElementById('ssa')
 ssabox.addEventListener('load', () => {
     // inject ssa style
-    let head = $("iframe").contents().find("head");
-    head.append($("<link/>", { rel: 'stylesheet', href: '/gossa/scrollbar.css', type: 'text/css'}));
+    $("iframe").contents().find("head").append($("<link/>", { rel: 'stylesheet', href: '/gossa/scrollbar.css', type: 'text/css'}));
     setMessageBox('', true)
 });
 
-let lastFuncName, lastCode;
+let lastFuncName, lastCode, lastGcflags;
 function build() {
     let funcname = document.getElementById('funcname').value;
     let code = document.getElementById('code').value;
+    let gcflags = document.getElementById('gcflags').value;
 
     // several early checks
-    if (funcname === lastFuncName && code == lastCode) {
+    if (funcname === lastFuncName && code === lastCode && gcflags === lastGcflags) {
         console.log('no changes, do not submit')
         return
     }
@@ -33,6 +33,7 @@ function build() {
 
     lastFuncName = funcname
     lastCode = code
+    lastGcflags = gcflags
     setMessageBox('Waiting for response...', false)
 
     fetch('/api/v1/buildssa', {
@@ -41,6 +42,7 @@ function build() {
         body: JSON.stringify({
             'funcname': funcname,
             'code': code,
+            'gcflags': gcflags,
         }),
     })
     .then((response) => {
@@ -53,8 +55,12 @@ function build() {
     })
     .then(res => {
         ssabox.src = `/gossa/buildbox/${res.data.build_id}/ssa.html`
+
+        // update url
+        const param = 'id='+res.data.build_id
+        history.pushState(null, null, document.location.href.split('?')[0] + '?' + param)
     })
-    .catch(res => setMessageBox(res.data.msg, true));
+    .catch(res => setMessageBox(res.data.msg, false));
 }
 
 function setMessageBox(msg, hide) {
@@ -95,8 +101,8 @@ $('#code').linedtextarea();
 $('#code').keydown(function(event){
     if (event.keyCode == 9) {
         event.preventDefault();
-        var start = this.selectionStart;
-        var end = this.selectionEnd;
+        let start = this.selectionStart;
+        let end = this.selectionEnd;
         // set textarea value to: text before caret + tab + text after caret
         $(this).val($(this).val().substring(0, start)
                     + "\t"
@@ -106,6 +112,35 @@ $('#code').keydown(function(event){
         this.selectionEnd = start + 1;
     }
 });
+
+function loadCode() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    if (id === null || id === undefined || id === '') { return; }
+    ssabox.src = `/gossa/buildbox/${id}/ssa.html`
+    // load code
+    fetch(`/gossa/buildbox/${id}/main.go`)
+    .then((response) => {
+        return new Promise((resolve, reject) => {
+            let func; response.status < 400 ? func = resolve : func = reject;
+            response.text().then(data => func({'status': response.status, 'data': data}));
+        });
+    })
+    .then(res => {
+        console.log(res)
+        document.getElementById('code').textContent = res.data
+    })
+    .catch(res => {
+        fetch(`/gossa/buildbox/${id}/main_test.go`)
+        .then(res => res.text())
+        .then(res => {
+            console.log(res)
+            document.getElementById('code').textContent = res
+        })
+        // if still fail? don't handle anything
+    });
+}
+loadCode() // load content if access with id
 
 // TODO: dragable scroll
 // let wholePage = document.querySelector('body');
