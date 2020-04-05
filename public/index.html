@@ -19,6 +19,10 @@
                 <input class="btn btn-primary" type="button" value="Build" id="build">
             </div>
             <div id="aboutControls">
+                <label class="switch">
+                    <input id="dark-mode-checkbox" type="checkbox" onchange="darkmode()">
+                    <span class="slider"></span>
+                </label>
                 <input class="btn btn-primary" type="button" value="About" id="aboutbtn">
             </div>
         </div>
@@ -40,11 +44,15 @@
             
             <p>The Go SSA Playground uses the latest stable release of Go. The current version is <a id="version" href="https://golang.org/dl/"></a>.</p>
 
-            <p>GitHub: <a href="https://github.com/changkun/ssaplayground">github.com/changkun/ssaplayground</a></p>
-
+            <ul>
+                <li>Website: <a href="https://changkun.de/gossa">changkun.de/gossa</a></li>
+                <li>GitHub: <a href="https://github.com/changkun/ssaplayground">github.com/changkun/ssaplayground</a></li>
+            </ul>
             <p>The author of the Go SSA Playground is <a href="https://changkun.de">Changkun Ou</a>.</p>
             </div>
     </div>
     <script src="/gossa/main.js"></script>
+    <script src="/gossa/magic.js"></script>
+    <script src="/gossa/dark.js"></script>
 </body>
 </html>

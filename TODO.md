@@ -2,6 +2,7 @@
 
 - [x] Test package support
 - [x] Auto format && import
+- [x] Dark mode
 - [ ] Message: waiting for SSA response
 - [ ] Better Editor: Monaco Editor
 - [ ] Dragable SSA
