@@ -3,10 +3,10 @@
 - [x] Test package support
 - [x] Auto format && import
 - [x] Dark mode
-- [ ] Message: waiting for SSA response
-- [ ] Better Editor: Monaco Editor
+- [x] Message: waiting for SSA response
 - [ ] Dragable SSA
 - [ ] Compiler flags, e.g. disable
 - [ ] More environment variable support, need investigation
 - [ ] Use short link instead of UUID
 - [ ] Containerized deployment
+- [ ] Better Editor: Monaco Editor

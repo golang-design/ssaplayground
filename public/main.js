@@ -3,9 +3,19 @@ function ping() {
         document.getElementById('version').innerText = data.go_version;
     });
 }
+ping(); // inject version info
+
+
 
 let msgbox = document.getElementById('outputMsg')
 let ssabox = document.getElementById('ssa')
+ssabox.addEventListener('load', () => {
+    // inject ssa style
+    let $head = $("iframe").contents().find("head");
+    $head.append($("<link/>", { rel: "stylesheet", href: "/gossa/scrollbar.css", type: "text/css"}));
+    setMessageBox('', true)
+});
+
 let lastFuncName, lastCode;
 function build() {
     let funcname = document.getElementById('funcname').value;
@@ -17,18 +27,17 @@ function build() {
         return
     }
     if (!code.includes('func '+funcname)) {
-        ssabox.src = ''
-        msgbox.innerText = 'GOFUNCNAME does not exist in your code.'
+        setMessageBox('GOFUNCNAME does not exist in your code.', false)
         return
     }
 
-    msgbox.innerText = ''
     lastFuncName = funcname
     lastCode = code
+    setMessageBox('Waiting for response...', false)
 
     fetch('/api/v1/buildssa', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json',},
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
             'funcname': funcname,
             'code': code,
@@ -44,24 +53,20 @@ function build() {
     })
     .then(res => {
         ssabox.src = `/gossa/buildbox/${res.data.build_id}/ssa.html`
-        msgbox.innerText = ''
     })
-    .catch(res => {
-        ssabox.src = ''
-        msgbox.innerText = res.data.msg
-    });
+    .catch(res => setMessageBox(res.data.msg, true));
 }
 
-// inject ssa style
-let ssablock = document.getElementById('ssa')
-ssablock.addEventListener('load', () => {
-    // wait until ssa is loaded
-    let $head = $("iframe").contents().find("head");
-    $head.append($("<link/>", { rel: "stylesheet", href: "/gossa/scrollbar.css", type: "text/css"}));
-})
-
-// inject version info
-ping();
+function setMessageBox(msg, hide) {
+    msgbox.innerText = msg
+    if (hide) {
+        ssabox.style.display = '';
+        msgbox.style.display = 'none';
+        return
+    }
+    ssabox.style.display = 'none';
+    msgbox.style.display = '';
+}
 
 // listen build action
 let buildssa = document.getElementById('build')
@@ -85,6 +90,7 @@ $('#aboutbtn').click(function() {
     aboutinfo.show();
 })
 
+// textarea and tab key stroke
 $('#code').linedtextarea();
 $('#code').keydown(function(event){
     if (event.keyCode == 9) {
