@@ -2,7 +2,7 @@ BUILD=ssaplayground.out
 all:
 	go build -o $(BUILD) -mod vendor
 start:
-	./ssaplayground -conf config.yaml
+	./$(BUILD) -conf config.yaml
 docker:
 	echo "NOT IMPLEMENTED"
 clean:

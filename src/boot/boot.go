@@ -40,7 +40,7 @@ func Run() {
 		terminated <- true
 	}()
 
-	logrus.Infof("gossaweb: welcome to gossaweb service... http://%s", config.Get().Addr)
+	logrus.Infof("gossaweb: welcome to gossaweb service... http://%s/gossa", config.Get().Addr)
 	err := server.ListenAndServe()
 	if err != http.ErrServerClosed {
 		logrus.Info("gossaweb: launch with error: ", err)
