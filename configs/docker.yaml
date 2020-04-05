@@ -1,0 +1,4 @@
+---
+addr: 0.0.0.0:6789
+mode: release
+static: public
