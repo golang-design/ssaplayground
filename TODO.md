@@ -11,3 +11,4 @@
 - [x] ~~Better Editor: Monaco Editor~~ maybe not?
 - [x] Containerized deployment
 - [x] Support Go Modules
+- [x] Flexible split view

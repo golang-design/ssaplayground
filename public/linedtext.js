@@ -25,8 +25,8 @@
 
 			/* Wrap the text area in the elements we need */
 			textarea.wrap("<div class='linedtextarea' style='height:100%; overflow:hidden'></div>");
-			textarea.width("95%");
-			textarea.parent().prepend("<div class='lines' style='width:5%'></div>");
+			textarea.width("calc(100% - 30px)");
+			textarea.parent().prepend("<div class='lines' style='width:30px'></div>");
 			var linesDiv = textarea.parent().find(".lines");
 
 			var scroll = function(tn) {

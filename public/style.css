@@ -86,12 +86,11 @@ input[type=button]:focus {
 #main {
     padding-top: 50px;
 	display: flex;
-	height: calc(100vh - 50px);
 	flex-direction: row;
+	height: calc(100vh - 50px);
 	overflow: auto;
 }
 #snippet {
-    flex: 30%;
     padding: 10px;
 	background: rgba(255, 252, 221, 0.81);
 }
@@ -103,7 +102,6 @@ input[type=button]:focus {
 	margin: 0 5px;
 }
 #output {
-    flex: 70%;
     background-color: #f1f1f1;
 }
 #outputMsg {
@@ -131,6 +129,20 @@ input[type=button]:focus {
 	width: 15px;
 	padding-right: 5px;
 	color: lightgray;
+}
+
+/* Split view */
+
+.gutter {
+	background-color: #eee;
+	width: 5px;
+	background-repeat: no-repeat;
+	background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+    background-image: url('/gossa/vertical.png');
+    cursor: col-resize;
 }
 
 /* Dark Mode Toggle */

@@ -142,6 +142,10 @@ function loadCode() {
 }
 loadCode() // load content if access with id
 
+Split(['#snippet', '#output'], {
+    sizes: [30, 70],
+})
+
 // TODO: dragable scroll
 // let wholePage = document.querySelector('body');
 // let el = document.querySelector("#ssa").contentDocument.querySelector('body');
