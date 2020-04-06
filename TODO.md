@@ -9,4 +9,5 @@
 - [x] ~~Use short link instead of UUID?~~ seems no need
 - [x] share with /gossa?id=uuid -> access /gossa/uuid/main.go or /gossa/uuid/main_test.go, access /gossa/uuid/ssa.html
 - [x] ~~Better Editor: Monaco Editor~~ maybe not?
-- [ ] Containerized deployment
+- [x] Containerized deployment
+- [x] Support Go Modules
