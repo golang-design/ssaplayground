@@ -46,6 +46,8 @@ type BuildSSAOutput struct {
 	Msg     string `json:"msg"`
 }
 
+// BuildSSA serves the code send by user and builds its SSA IR into html.
+// TODO: speedup for request response, e.g. as async rest api.
 func BuildSSA(c *gin.Context) {
 	// 1. create a folder in config.Get().Static/buildbox
 	out := BuildSSAOutput{
@@ -65,7 +67,7 @@ func BuildSSA(c *gin.Context) {
 	err = c.BindJSON(&in)
 	if err != nil {
 		os.Remove(path)
-		out.Msg = fmt.Sprintf("cannot bind input params, err: %v", err)
+		out.Msg = fmt.Sprintf("cannot bind input params, err: \n%v", err)
 		c.JSON(http.StatusInternalServerError, out)
 		return
 	}
@@ -86,24 +88,35 @@ func BuildSSA(c *gin.Context) {
 	err = ioutil.WriteFile(buildFile, []byte(in.Code), os.ModePerm)
 	if err != nil {
 		os.Remove(path)
-		out.Msg = err.Error()
+		out.Msg = fmt.Sprintf("cannot save your code, err: \n%v", err)
 		c.JSON(http.StatusInternalServerError, out)
 		return
 	}
 
-	// 3. goimports && GOSSAFUNC=foo go build
+	// 3.1 goimports
 	err = autoimports(buildFile)
 	if err != nil {
 		os.Remove(path)
-		out.Msg = err.Error()
+		out.Msg = fmt.Sprintf("cannot run autoimports for your code, err: \n%v", err)
 		c.JSON(http.StatusBadRequest, out)
 		return
 	}
+
+	// 3.2 go mod init gossa && go mod tidy
+	err = initModules(path)
+	if err != nil {
+		os.Remove(path)
+		out.Msg = fmt.Sprintf("cannot use go modules for your code, err: \n%v", err)
+		c.JSON(http.StatusBadRequest, out)
+		return
+	}
+
+	// 3.3 GOSSAFUNC=foo go build
 	outFile := filepath.Join(path, "/main.out")
 	err = buildSSA(in.FuncName, in.GcFlags, outFile, buildFile, isTest)
 	if err != nil {
 		os.Remove(path)
-		out.Msg = err.Error()
+		out.Msg = fmt.Sprintf("cannot build ssa for your code, err: \n%v", err)
 		c.JSON(http.StatusBadRequest, out)
 		return
 	}
@@ -135,6 +148,32 @@ func autoimports(outf string) error {
 		msg = strings.ReplaceAll(msg, filepath.Dir(outf), "$GOSSAPATH")
 		return errors.New(msg)
 	}
+	return nil
+}
+
+func initModules(path string) error {
+	// 1. go mod init
+	cmd := exec.Command("go", "mod", "init", "gossa")
+	cmd.Dir = path
+	cmd.Stderr = &bytes.Buffer{}
+	err := cmd.Run()
+	if err != nil {
+		msg := cmd.Stderr.(*bytes.Buffer).String()
+		msg = strings.ReplaceAll(msg, path, "$GOSSAPATH")
+		return errors.New(msg)
+	}
+
+	// 2. go mod tidy
+	cmd = exec.Command("go", "mod", "tidy")
+	cmd.Dir = path
+	cmd.Stderr = &bytes.Buffer{}
+	err = cmd.Run()
+	if err != nil {
+		msg := cmd.Stderr.(*bytes.Buffer).String()
+		msg = strings.ReplaceAll(msg, path, "$GOSSAPATH")
+		return errors.New(msg)
+	}
+
 	return nil
 }
 
