@@ -1,6 +1,6 @@
 package main
 
-import "github.com/changkun/ssaplayground/src/boot"
+import "golang.design/x/ssaplayground/src/boot"
 
 func main() {
 	boot.Run()

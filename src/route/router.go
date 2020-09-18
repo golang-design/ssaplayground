@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"net/http/pprof"
 
-	"github.com/changkun/ssaplayground/src/config"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	"golang.design/x/ssaplayground/src/config"
 )
 
 // Register routers

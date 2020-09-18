@@ -6,8 +6,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/changkun/ssaplayground/src/config"
 	"github.com/gin-gonic/gin"
+	"golang.design/x/ssaplayground/src/config"
 )
 
 // serveFS is a middleware that allows static files serves

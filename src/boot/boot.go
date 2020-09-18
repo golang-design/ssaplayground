@@ -7,9 +7,9 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/changkun/ssaplayground/src/config"
-	"github.com/changkun/ssaplayground/src/route"
 	"github.com/sirupsen/logrus"
+	"golang.design/x/ssaplayground/src/config"
+	"golang.design/x/ssaplayground/src/route"
 )
 
 func init() {

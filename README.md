@@ -1,8 +1,8 @@
-# Go SSA Playground
+# The Go SSA Playground
 
-https://changkun.de/gossa
+https://golang.design/gossa
 
-A tool for exploring go ssa intermediate representation.
+A tool for exploring Go's SSA intermediate representation.
 
 ![](./public/assets/screen.png)
 
@@ -28,7 +28,7 @@ Then access http://localhost:6789/gossa.
 
 ## Contribution
 
-We would love to hear your feedback. Submit [an issue](https://github.com/changkun/ssaplayground/issues/new) to tell bugs or feature requests.
+We would love to hear your feedback. Submit [an issue](https://github.com/golang-design/ssaplayground/issues/new) to tell bugs or feature requests.
 
 ## License
 

@@ -1,4 +1,4 @@
-module github.com/changkun/ssaplayground
+module golang.design/x/ssaplayground
 
 go 1.14
 
