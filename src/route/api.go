@@ -184,9 +184,9 @@ func initModules(path string) error {
 func buildSSA(funcname, gcflags, outf, buildf string, isTest bool) error {
 	var cmd *exec.Cmd
 	if !isTest {
-		cmd = exec.Command("go", "build", fmt.Sprintf(`-gcflags=%s`, gcflags), "-o", outf, buildf)
+		cmd = exec.Command("go", "build", "-mod=readonly", fmt.Sprintf(`-gcflags=%s`, gcflags), "-o", outf, buildf)
 	} else {
-		cmd = exec.Command("go", "test", fmt.Sprintf(`-gcflags=%s`, gcflags), buildf)
+		cmd = exec.Command("go", "test", "-mod=readonly", fmt.Sprintf(`-gcflags=%s`, gcflags), buildf)
 	}
 	cmd.Env = append(os.Environ(), fmt.Sprintf("GOSSAFUNC=%s", funcname))
 	cmd.Stderr = &bytes.Buffer{}
