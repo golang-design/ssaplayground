@@ -40,11 +40,14 @@ func Pong(c *gin.Context) {
 	})
 }
 
+// BuildSSAInput ...
 type BuildSSAInput struct {
 	FuncName string `json:"funcname"`
 	GcFlags  string `json:"gcflags"`
 	Code     string `json:"code"`
 }
+
+// BuildSSAOutput ...
 type BuildSSAOutput struct {
 	BuildID string `json:"build_id"`
 	Msg     string `json:"msg"`

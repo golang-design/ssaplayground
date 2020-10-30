@@ -3,7 +3,7 @@
 // by a GPLv3 license that can be found in the LICENSE file.
 
 function ping() {
-    fetch('/api/v1/ping').then(res => res.json()).then(data => {
+    fetch('/gossa/api/v1/ping').then(res => res.json()).then(data => {
         document.getElementById('version').innerText = data.go_version;
     });
 }
@@ -40,7 +40,7 @@ function build() {
     lastGcflags = gcflags
     setMessageBox('Waiting for response...', false)
 
-    fetch('/api/v1/buildssa', {
+    fetch('/gossa/api/v1/buildssa', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({

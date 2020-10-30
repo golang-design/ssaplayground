@@ -27,24 +27,27 @@ func Register() *gin.Engine {
 	return r.Engine
 }
 
+// Router ...
 type Router struct {
 	Engine *gin.Engine
 }
 
+// SetupAPI ...
 func (r *Router) SetupAPI() {
-	v1 := r.Engine.Group("/api/v1")
+	v1 := r.Engine.Group("/gossa/api/v1")
 	{
 		v1.GET("/ping", Pong)
 		v1.POST("/buildssa", BuildSSA)
 	}
 }
 
+// SetupApp ...
 func (r *Router) SetupApp() {
 	r.Engine.Use(static("/gossa"))
 	logrus.Infof("GoSSAWeb is on: http://%s, static: %s", config.Get().Addr, config.Get().Static)
 }
 
-// profile the standard HandlerFuncs from the net/http/pprof package with
+// SetupProfile profiles the standard HandlerFuncs from the net/http/pprof package with
 // the provided gin.Engine. prefixOptions is a optional. If not prefixOptions,
 // the default path prefix is used, otherwise first prefixOptions will be path prefix.
 //
