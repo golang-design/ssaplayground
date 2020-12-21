@@ -1,20 +1,15 @@
-NAME=ssaplayground
-BUILD=$(NAME).out
-IMAGE=$(NAME)
+NAME=gossa
 VERSION = $(shell git describe --always --tags)
 all: clean
-	go build -o $(BUILD) -mod vendor
-	./$(BUILD) -conf configs/config.yaml
-docker:
-	docker build -t $(IMAGE):$(VERSION) -t $(IMAGE):latest -f docker/Dockerfile .
-run:
-	docker ps -a | grep $(NAME) && ([ $$? -eq 0 ] && (docker stop $(NAME) && docker rm -f $(NAME))) || echo "no running container."
-	docker run -itd -v $(shell pwd)/data:/app/public/buildbox -p 6789:6789 --name $(NAME) ssaplayground:latest
-tidy:
-	docker ps -a | grep $(NAME)
-	[ $$? -eq 0 ] && docker stop $(NAME) && docker rm -f $(NAME)
-	docker images -f "dangling=true" -q | xargs docker rmi -f
-	docker image prune -f
-clean:
-	rm -rf $(BUILD)
-.PHONY: all docker run tidy clean
+	go build -o $(NAME) -mod vendor
+	./$(NAME) -conf configs/config.yaml
+build:
+	docker build -t $(NAME):$(VERSION) -t $(NAME):latest -f docker/Dockerfile .
+up: down
+	docker-compose -f docker/deploy.yml up -d
+down:
+	docker-compose -f docker/deploy.yml down
+clean: down
+	rm -rf $(NAME)
+	docker rmi -f $(shell docker images -f "dangling=true" -q) 2> /dev/null; true
+	docker rmi -f $(NAME):latest $(NAME):$(VERSION) 2> /dev/null; true

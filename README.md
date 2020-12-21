@@ -20,8 +20,8 @@ $ make
 If you have Docker, then you can use:
 
 ```bash
-$ make docker # build the docker image
-$ make run    # run/update for latest image
+$ make build # build the docker image
+$ make up    # run/update for latest image
 ```
 
 Then access http://localhost:6789/gossa.
