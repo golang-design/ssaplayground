@@ -68,7 +68,7 @@ Usage:
 }
 
 func commondCheck() {
-	//check goimports
+	// check goimports
 	cmd := exec.Command("goimports", "-h")
 	cmd.Stderr = &bytes.Buffer{}
 	err := cmd.Run()
