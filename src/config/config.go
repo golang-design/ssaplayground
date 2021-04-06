@@ -59,7 +59,7 @@ Usage:
 	if err != nil {
 		logrus.Fatalf("fatal: fail to parse configuration file: %v", err)
 	}
-	commondCheck()
+	commandCheck()
 	gin.SetMode(conf.Mode)
 
 	logrus.SetFormatter(&logrus.TextFormatter{})
