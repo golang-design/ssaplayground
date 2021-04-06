@@ -67,7 +67,7 @@ Usage:
 	logrus.Infof("load config file: %q", f)
 }
 
-func commondCheck() {
+func commandCheck() {
 	// check goimports
 	cmd := exec.Command("goimports", "-h")
 	cmd.Stderr = &bytes.Buffer{}
