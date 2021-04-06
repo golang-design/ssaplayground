@@ -47,6 +47,7 @@ func Run() {
 	logrus.Infof("ssaplayground: welcome to ssaplayground service... http://%s/gossa", config.Get().Addr)
 	err := server.ListenAndServe()
 	if err != http.ErrServerClosed {
+		terminated <- true
 		logrus.Info("ssaplayground: launch with error: ", err)
 	}
 
