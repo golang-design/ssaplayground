@@ -5,10 +5,12 @@
 package config
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -57,9 +59,21 @@ Usage:
 	if err != nil {
 		logrus.Fatalf("fatal: fail to parse configuration file: %v", err)
 	}
+	commondCheck()
 	gin.SetMode(conf.Mode)
 
 	logrus.SetFormatter(&logrus.TextFormatter{})
 	logrus.SetReportCaller(false)
 	logrus.Infof("load config file: %q", f)
+}
+
+func commondCheck() {
+	//check goimports
+	cmd := exec.Command("goimports", "-h")
+	cmd.Stderr = &bytes.Buffer{}
+	err := cmd.Run()
+	if err != nil && cmd.Stderr.(*bytes.Buffer).String() == "" {
+		logrus.Fatalf("fatal: commond not found: %v", err)
+		return
+	}
 }
