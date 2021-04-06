@@ -73,7 +73,7 @@ func commondCheck() {
 	cmd.Stderr = &bytes.Buffer{}
 	err := cmd.Run()
 	if err != nil && cmd.Stderr.(*bytes.Buffer).String() == "" {
-		logrus.Fatalf("fatal: commond not found: %v", err)
+		logrus.Fatalf("fatal: goimports commond not found: %v", err)
 		return
 	}
 }
