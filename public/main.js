@@ -30,7 +30,7 @@ function build() {
         console.log('no changes, do not submit')
         return
     }
-    if (!code.includes('func '+funcname)) {
+    if (!findSSAFunc(code, funcname)) {
         setMessageBox('GOFUNCNAME does not exist in your code.', false)
         return
     }
@@ -65,6 +65,25 @@ function build() {
         history.pushState(null, null, document.location.href.split('?')[0] + '?' + param)
     })
     .catch(res => setMessageBox(res.data.msg, false));
+}
+
+const methodPattern = /^\([\w\*]+\)\.\w+$/
+const globPattern = /^glob\.\.func\d+(\.\d)*$/
+const anonyPattern = /^\w+\.func\d+(\.\d)*$/
+
+function findSSAFunc(code, funcname) {
+    if (funcname.indexOf('.') != -1) {
+        if (funcname[0] == '(') {
+            return methodPattern.test(funcname)
+        } else if (funcname.startsWith("glob")) {
+            return globPattern.test(funcname)
+        } else {
+            return anonyPattern.test(funcname)
+        }
+    }
+
+    let funcDclPattern = new RegExp(`func[ \\t]+${funcname}[ \\t]*\\(`)
+    return funcDclPattern.test(code)
 }
 
 function setMessageBox(msg, hide) {
