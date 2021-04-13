@@ -134,7 +134,35 @@ func BuildSSA(c *gin.Context) {
 	c.JSON(http.StatusOK, out)
 }
 
+/* According to spec there are two cases we need to handle:
+	- function declaration, in the form of 'func f() {...}' , see https://golang.org/ref/spec#Function_declarations
+	- function literal/anonymous function, in the form of 'myfunc := func() {...}' or 'go func() {...}', see https://golang.org/ref/spec#Function_literals
+   As users can use some tricks like raw string to bypass our check, we only do check conservatively, which means it is mainly used for preventing misspell and wrong format.
+
+   all cases:	// <i>,<j>,<k> means unique function index in the scope of outer function, see https://github.com/golang/go/blob/84162b88324aa7993fe4a8580a2b65c6a7055f88/src/cmd/compile/internal/typecheck/func.go#L182
+	- func foo()	// most common case
+	- glob..func<i>	// global function literal
+		+ glob..func<i>.<j>.<k>...		// inner anonymous function
+	- foo.func<i>	// anonymous function inside function 'foo'
+		+ foo.func<i>.<j>.<k>...
+	- (*T).foo()	// method expression with explicit receiver, see https://golang.org/ref/spec#Method_expressions
+
+	note: non-ascii letters are unsupported, as our intention is to dig into golang ssa IR
+*/
 func findSSAFunc(code, funcname string) bool {
+	// dot is invalid in function name, see https://golang.org/ref/spec#Identifiers
+	if strings.IndexByte(funcname, '.') != -1 {
+		if funcname[0] == '(' {
+			methodReg := regexp.MustCompile(`^\([\w\*]+\)\.\w+$`)
+			return methodReg.MatchString(funcname)
+		} else if strings.HasPrefix(funcname, "glob") {
+			globReg := regexp.MustCompile(`^glob\.\.func\d+(\.\d)*$`)
+			return globReg.MatchString(funcname)
+		} else {
+			anonyReg := regexp.MustCompile(`^\w+\.func\d+(\.\d)*$`)
+			return anonyReg.MatchString(funcname)
+		}
+	}
 	// func Foo (
 	re := regexp.MustCompile(fmt.Sprintf(`func[ \t]+%s[ \t]*\(`, funcname))
 	return re.FindString(code) != ""
@@ -186,11 +214,18 @@ func initModules(path string) error {
 
 func buildSSA(funcname, gcflags, outf, buildf string, isTest bool) error {
 	var cmd *exec.Cmd
+	var buildDir string
+
+	buildDir = filepath.Dir(buildf) // fix https://github.com/golang-design/ssaplayground/issues/9
+	outf = filepath.Base(outf)
+	buildf = filepath.Base(buildf)
+
 	if !isTest {
 		cmd = exec.Command("go", "build", "-mod=readonly", fmt.Sprintf(`-gcflags=%s`, gcflags), "-o", outf, buildf)
 	} else {
 		cmd = exec.Command("go", "test", "-mod=readonly", fmt.Sprintf(`-gcflags=%s`, gcflags), buildf)
 	}
+	cmd.Dir = buildDir
 	cmd.Env = append(os.Environ(), fmt.Sprintf("GOSSAFUNC=%s", funcname))
 	cmd.Stderr = &bytes.Buffer{}
 	err := cmd.Run()
