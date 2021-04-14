@@ -38,6 +38,11 @@ github.com/sirupsen/logrus
 github.com/ugorji/go/codec
 # golang.org/x/sys v0.0.0-20200116001909-b77594299b42
 golang.org/x/sys/unix
+# golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e
+## explicit
+golang.org/x/tools/go/ast/astutil
+golang.org/x/tools/imports
+golang.org/x/tools/internal/fastwalk
 # gopkg.in/yaml.v2 v2.2.8
 ## explicit
 gopkg.in/yaml.v2
