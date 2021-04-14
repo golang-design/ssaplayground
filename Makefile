@@ -5,7 +5,7 @@ all: clean
 	./$(NAME) -conf configs/config.yaml
 build:
 	docker build -t $(NAME):$(VERSION) -t $(NAME):latest -f docker/Dockerfile .
-up: down
+up:
 	docker-compose -f docker/deploy.yml up -d
 down:
 	docker-compose -f docker/deploy.yml down

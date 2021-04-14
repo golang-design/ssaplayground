@@ -32,4 +32,4 @@ We would love to hear your feedback. Submit [an issue](https://github.com/golang
 
 ## License
 
-GNU GPLv3 &copy; [Changkun Ou](https://changkun.de)
+GNU GPLv3 &copy; The [golang.design](https://golang.design) Authors. Originally created by [Changkun Ou](https://changkun.de).

@@ -2,7 +2,7 @@
 # All rights reserved. Use of this source code is governed
 # by a GPLv3 license that can be found in the LICENSE file.
 
-FROM golang:1.15.6
+FROM golang:1.16.3
 WORKDIR /app
 ADD . /app
 # required for runtime/cgo
