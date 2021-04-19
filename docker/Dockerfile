@@ -6,7 +6,5 @@ FROM golang:1.16.3
 WORKDIR /app
 ADD . /app
 # required for runtime/cgo
-RUN apt install g++ && \
-  go get -u golang.org/x/tools/cmd/goimports && go mod tidy && \
-  go build -o gossa -mod=readonly
+RUN apt install g++ && go mod tidy && go build -o gossa -mod=readonly
 CMD [ "/app/gossa", "-conf=/app/configs/docker.yaml"]
