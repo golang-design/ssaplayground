@@ -199,19 +199,6 @@ func autoimports(code []byte) ([]byte, error) {
 	return out, nil
 }
 
-/*
-func autoimports(outf string) error {
-	cmd := exec.Command("goimports", "-w", outf)
-	cmd.Stderr = &bytes.Buffer{}
-	err := cmd.Run()
-	if err != nil {
-		msg := cmd.Stderr.(*bytes.Buffer).String()
-		msg = strings.ReplaceAll(msg, filepath.Dir(outf), "$GOSSAPATH")
-		return errors.New(msg)
-	}
-	return nil
-}
-*/
 func initModules(path string) error {
 	// 1. go mod init
 	cmd := exec.Command("go", "mod", "init", "gossa")
