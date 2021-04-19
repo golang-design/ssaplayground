@@ -59,7 +59,8 @@ type BuildSSAOutput struct {
 func BuildSSA(c *gin.Context) {
 	// 1. create a folder in config.Get().Static/buildbox
 	out := BuildSSAOutput{
-		BuildID: uuid.New().String(),
+		// use UUIDv1 such that the id contains time information
+		BuildID: uuid.Must(uuid.NewUUID()).String(),
 	}
 	path := filepath.Join(config.Get().Static, "/buildbox", "/"+out.BuildID)
 

@@ -27,7 +27,7 @@ type localFileSystem struct {
 	indexes bool
 }
 
-func loacalFile(root string, indexes bool) *localFileSystem {
+func loacalFile(root string, indexes bool) serveFS {
 	return &localFileSystem{
 		FileSystem: gin.Dir(root, indexes),
 		root:       root,
