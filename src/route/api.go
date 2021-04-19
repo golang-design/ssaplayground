@@ -192,7 +192,13 @@ func isPackageTest(code string) bool {
 }
 
 func autoimports(code []byte) ([]byte, error) {
-	out, err := imports.Process("", code, &imports.Options{})
+	out, err := imports.Process("", code, &imports.Options{
+		Fragment:  true,
+		AllErrors: true,
+		Comments:  true,
+		TabIndent: true,
+		TabWidth:  8,
+	})
 	if err != nil {
 		return nil, err
 	}
