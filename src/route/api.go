@@ -20,6 +20,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"golang.design/x/ssaplayground/src/config"
+	"golang.org/x/tools/imports"
 )
 
 // PingInput is a a reserved structure
@@ -92,20 +93,21 @@ func BuildSSA(c *gin.Context) {
 	} else {
 		buildFile = filepath.Join(path, "/main_test.go")
 	}
-	err = ioutil.WriteFile(buildFile, []byte(in.Code), os.ModePerm)
-	if err != nil {
-		os.Remove(path)
-		out.Msg = fmt.Sprintf("cannot save your code, err: \n%v", err)
-		c.JSON(http.StatusInternalServerError, out)
-		return
-	}
 
 	// 3.1 goimports
-	err = autoimports(buildFile)
+	importedCode, err := autoimports([]byte(in.Code))
 	if err != nil {
 		os.Remove(path)
 		out.Msg = fmt.Sprintf("cannot run autoimports for your code, err: \n%v", err)
 		c.JSON(http.StatusBadRequest, out)
+		return
+	}
+
+	err = ioutil.WriteFile(buildFile, importedCode, os.ModePerm)
+	if err != nil {
+		os.Remove(path)
+		out.Msg = fmt.Sprintf("cannot save your code, err: \n%v", err)
+		c.JSON(http.StatusInternalServerError, out)
 		return
 	}
 
@@ -189,16 +191,18 @@ func isPackageTest(code string) bool {
 	return re.FindString(code) != ""
 }
 
-func autoimports(outf string) error {
-	cmd := exec.Command("goimports", "-w", outf)
-	cmd.Stderr = &bytes.Buffer{}
-	err := cmd.Run()
+func autoimports(code []byte) ([]byte, error) {
+	out, err := imports.Process("", code, &imports.Options{
+		Fragment:  true,
+		AllErrors: true,
+		Comments:  true,
+		TabIndent: true,
+		TabWidth:  8,
+	})
 	if err != nil {
-		msg := cmd.Stderr.(*bytes.Buffer).String()
-		msg = strings.ReplaceAll(msg, filepath.Dir(outf), "$GOSSAPATH")
-		return errors.New(msg)
+		return nil, err
 	}
-	return nil
+	return out, nil
 }
 
 func initModules(path string) error {
