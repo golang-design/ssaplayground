@@ -8,10 +8,10 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 )
 
@@ -49,17 +49,15 @@ Usage:
 
 	y, err := ioutil.ReadFile(f)
 	if err != nil {
-		logrus.Fatalf("fatal: fail to read configuration file: %v", err)
+		log.Fatalf("fatal: fail to read configuration file: %v", err)
 	}
 
 	conf = &Config{}
 	err = yaml.Unmarshal(y, conf)
 	if err != nil {
-		logrus.Fatalf("fatal: fail to parse configuration file: %v", err)
+		log.Fatalf("fatal: fail to parse configuration file: %v", err)
 	}
 	gin.SetMode(conf.Mode)
 
-	logrus.SetFormatter(&logrus.TextFormatter{})
-	logrus.SetReportCaller(false)
-	logrus.Infof("load config file: %q", f)
+	log.Printf("load config file: %q", f)
 }

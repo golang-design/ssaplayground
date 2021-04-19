@@ -6,17 +6,20 @@ package boot
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"syscall"
 	"time"
 
-	"github.com/sirupsen/logrus"
 	"golang.design/x/ssaplayground/src/config"
 	"golang.design/x/ssaplayground/src/route"
 )
 
 func init() {
+	log.SetPrefix("redir: ")
+	log.SetFlags(log.Lmsgprefix | log.LstdFlags | log.Lshortfile)
 	config.Init()
 }
 
@@ -30,27 +33,27 @@ func Run() {
 
 	go func() {
 		quit := make(chan os.Signal, 1)
-		signal.Notify(quit, os.Interrupt, os.Kill)
+		signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 		sig := <-quit
 
-		logrus.Info("ssaplayground: service is stopped with signal: ", sig)
+		log.Printf("service is stopped with signal: %v", sig)
 
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		if err := server.Shutdown(ctx); err != nil {
-			logrus.Errorf("ssaplayground: close ssaplayground with error: %v", err)
+			log.Printf("close ssaplayground with error: %v", err)
 		}
 
 		cancel()
 		terminated <- true
 	}()
 
-	logrus.Infof("ssaplayground: welcome to ssaplayground service... http://%s/gossa", config.Get().Addr)
+	log.Printf("welcome to ssaplayground service... http://%s/gossa", config.Get().Addr)
 	err := server.ListenAndServe()
 	if err != http.ErrServerClosed {
 		terminated <- true
-		logrus.Info("ssaplayground: launch with error: ", err)
+		log.Printf("launch with error: %v", err)
 	}
 
 	<-terminated
-	logrus.Info("ssaplayground: service has terminated successfully, good bye!")
+	log.Printf("service has terminated successfully, good bye!")
 }
