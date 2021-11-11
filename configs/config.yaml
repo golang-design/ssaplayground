@@ -3,6 +3,6 @@
 # by a GPLv3 license that can be found in the LICENSE file.
 
 ---
-addr: localhost:6789
+addr: localhost:80
 mode: debug
 static: public

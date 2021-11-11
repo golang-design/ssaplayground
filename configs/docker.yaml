@@ -3,6 +3,6 @@
 # by a GPLv3 license that can be found in the LICENSE file.
 
 ---
-addr: 0.0.0.0:6789
+addr: 0.0.0.0:80
 mode: release
 static: public

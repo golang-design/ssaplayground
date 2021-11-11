@@ -12,5 +12,8 @@ services:
     image: gossa:latest
     cap_add:
       - SYS_PTRACE # for debugging
-    ports:
-      - "6789:6789"
+    networks:
+      - traefik_proxy
+networks:
+  traefik_proxy:
+    external: true

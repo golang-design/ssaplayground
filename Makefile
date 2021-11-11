@@ -4,7 +4,7 @@ all: clean
 	go build -o $(NAME) -mod vendor
 	./$(NAME) -conf configs/config.yaml
 build:
-	docker build -t $(NAME):$(VERSION) -t $(NAME):latest -f docker/Dockerfile .
+	docker build -t $(NAME):latest -f docker/Dockerfile .
 up:
 	docker-compose -f docker/deploy.yml up -d
 down:
