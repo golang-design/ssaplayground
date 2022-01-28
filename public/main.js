@@ -10,13 +10,80 @@ function ping() {
 ping(); // inject version info
 
 
-
+let darkMode = false
 let msgbox = document.getElementById('outputMsg')
 let ssabox = document.getElementById('ssa')
 ssabox.addEventListener('load', () => {
+    if (darkMode) {
+        ssabox.contentWindow.document.getElementById('dark-mode-button').click()
+    }
+
     // inject ssa style
     $("iframe").contents().find("head").append($("<link/>", { rel: 'stylesheet', href: '/gossa/scrollbar.css', type: 'text/css'}));
     setMessageBox('', true)
+    ssabox.contentWindow.document
+        .getElementById('dark-mode-button')
+        .addEventListener('click', function() {
+            const banner = document.getElementById('banner')
+            const snippet = document.getElementById('snippet')
+            const about = document.getElementById('about')
+            const funcname = document.getElementById('funcname')
+            const gcflags = document.getElementById('gcflags')
+            const horiz = document.querySelectorAll('.gutter.gutter-horizontal')
+            const btns = document.querySelectorAll('input[type=button]')
+            const code = document.getElementById('code')
+            const links = document.querySelectorAll('#about a')
+
+            if (darkMode) {
+                banner.style.backgroundColor = '#E0EBF5'
+                snippet.style.backgroundColor = 'rgba(255, 252, 221, 0.81)'
+                about.style.backgroundColor = '#FFD'
+                funcname.style.backgroundColor = '#fff'
+                funcname.style.border = '1px solid #ccc'
+                funcname.style.color = ''
+                gcflags.style.backgroundColor = '#fff'
+                gcflags.style.border = '1px solid #ccc'
+                gcflags.style.color = ''
+                horiz.forEach((v) => {
+                    v.style.filter = ''
+                })
+                btns.forEach((v) => {
+                    v.style.backgroundColor = '#375EAB'
+                    v.style.color = '#fff'
+                })
+                code.style.color = 'black'
+                links.forEach(v => {
+                    v.style.color = ''
+                })
+                document.body.style.color = 'black'
+
+                darkMode = false
+            } else {
+                banner.style.backgroundColor = '#566'
+                snippet.style.backgroundColor = '#665'
+                about.style.backgroundColor = '#665'
+                funcname.style.backgroundColor = '#343'
+                funcname.style.border = '1px solid #454'
+                funcname.style.color = 'lightgray'
+                gcflags.style.backgroundColor = '#343'
+                gcflags.style.border = '1px solid #454'
+                gcflags.style.color = 'lightgray'
+                horiz.forEach((v) => {
+                    v.style.filter = 'invert(.7)'
+                })
+                btns.forEach((v) => {
+                    v.style.backgroundColor = '#0044cb'
+                    v.style.color = 'lightgray'
+                })
+                code.style.color = 'rgb(230, 255, 255)'
+                links.forEach(v => {
+                    v.style.color = '#809fff'
+                })
+                document.body.style.color = 'lightgray'
+
+                darkMode = true
+            }
+        })
 });
 
 let lastFuncName, lastCode, lastGcflags;
