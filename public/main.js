@@ -10,12 +10,70 @@ function ping() {
 ping(); // inject version info
 
 
-let darkMode = false
+const banner = document.getElementById('banner')
+const snippet = document.getElementById('snippet')
+const about = document.getElementById('about')
+const funcname = document.getElementById('funcname')
+const gcflags = document.getElementById('gcflags')
+const horiz = document.querySelectorAll('.gutter.gutter-horizontal')
+const btns = document.querySelectorAll('input[type=button]')
+const code = document.getElementById('code')
+const links = document.querySelectorAll('#about a')
+const gutter = document.getElementsByClassName('gutter')
+const output = document.getElementById('output')
+
+function setDarkMode() {
+    banner.style.backgroundColor = '#566'
+    snippet.style.backgroundColor = '#665'
+    about.style.backgroundColor = '#665'
+    funcname.style.backgroundColor = '#343'
+    funcname.style.border = '1px solid #454'
+    funcname.style.color = 'lightgray'
+    gcflags.style.backgroundColor = '#343'
+    gcflags.style.border = '1px solid #454'
+    gcflags.style.color = 'lightgray'
+    horiz.forEach(v => v.style.filter = 'invert(.7)')
+    btns.forEach(v => {
+        v.style.backgroundColor = '#0044cb'
+        v.style.color = 'lightgray'
+    })
+    code.style.color = 'rgb(230, 255, 255)'
+    links.forEach(v => v.style.color = '#809fff')
+    gutter[0].style.backgroundColor = 'rgb(45, 45, 45)'
+    output.style.backgroundColor = 'rgb(60, 60, 60)'
+    document.body.style.color = 'lightgray'
+}
+
+function setLightMode() {
+    banner.style.backgroundColor = '#E0EBF5'
+    snippet.style.backgroundColor = 'rgba(255, 252, 221, 0.81)'
+    about.style.backgroundColor = '#FFD'
+    funcname.style.backgroundColor = '#fff'
+    funcname.style.border = '1px solid #ccc'
+    funcname.style.color = ''
+    gcflags.style.backgroundColor = '#fff'
+    gcflags.style.border = '1px solid #ccc'
+    gcflags.style.color = ''
+    horiz.forEach(v => v.style.filter = '')
+    btns.forEach(v => {
+        v.style.backgroundColor = '#375EAB'
+        v.style.color = '#fff'
+    })
+    code.style.color = 'black'
+    links.forEach(v => v.style.color = '')
+    gutter[0].style.backgroundColor = '#eee'
+    output.style.backgroundColor = '#f1f1f1'
+    document.body.style.color = 'black'
+}
+
 let msgbox = document.getElementById('outputMsg')
 let ssabox = document.getElementById('ssa')
 ssabox.addEventListener('load', () => {
-    if (darkMode) {
-        ssabox.contentWindow.document.getElementById('dark-mode-button').click()
+    const darkBtn = ssabox.contentWindow.document.getElementById('dark-mode-button')
+    if (darkBtn.checked) {
+        setDarkMode()
+    } else {
+        setLightMode()
     }
 
     // inject ssa style
@@ -24,67 +82,23 @@ ssabox.addEventListener('load', () => {
     ssabox.contentWindow.document
         .getElementById('dark-mode-button')
         .addEventListener('click', function() {
-            const banner = document.getElementById('banner')
-            const snippet = document.getElementById('snippet')
-            const about = document.getElementById('about')
-            const funcname = document.getElementById('funcname')
-            const gcflags = document.getElementById('gcflags')
-            const horiz = document.querySelectorAll('.gutter.gutter-horizontal')
-            const btns = document.querySelectorAll('input[type=button]')
-            const code = document.getElementById('code')
-            const links = document.querySelectorAll('#about a')
-
-            if (darkMode) {
-                banner.style.backgroundColor = '#E0EBF5'
-                snippet.style.backgroundColor = 'rgba(255, 252, 221, 0.81)'
-                about.style.backgroundColor = '#FFD'
-                funcname.style.backgroundColor = '#fff'
-                funcname.style.border = '1px solid #ccc'
-                funcname.style.color = ''
-                gcflags.style.backgroundColor = '#fff'
-                gcflags.style.border = '1px solid #ccc'
-                gcflags.style.color = ''
-                horiz.forEach((v) => {
-                    v.style.filter = ''
-                })
-                btns.forEach((v) => {
-                    v.style.backgroundColor = '#375EAB'
-                    v.style.color = '#fff'
-                })
-                code.style.color = 'black'
-                links.forEach(v => {
-                    v.style.color = ''
-                })
-                document.body.style.color = 'black'
-
-                darkMode = false
+            if (darkBtn.checked) {
+                setDarkMode()
             } else {
-                banner.style.backgroundColor = '#566'
-                snippet.style.backgroundColor = '#665'
-                about.style.backgroundColor = '#665'
-                funcname.style.backgroundColor = '#343'
-                funcname.style.border = '1px solid #454'
-                funcname.style.color = 'lightgray'
-                gcflags.style.backgroundColor = '#343'
-                gcflags.style.border = '1px solid #454'
-                gcflags.style.color = 'lightgray'
-                horiz.forEach((v) => {
-                    v.style.filter = 'invert(.7)'
-                })
-                btns.forEach((v) => {
-                    v.style.backgroundColor = '#0044cb'
-                    v.style.color = 'lightgray'
-                })
-                code.style.color = 'rgb(230, 255, 255)'
-                links.forEach(v => {
-                    v.style.color = '#809fff'
-                })
-                document.body.style.color = 'lightgray'
-
-                darkMode = true
+                setLightMode()
             }
         })
 });
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    ssabox.contentWindow.document.getElementById('dark-mode-button').click()
+    if (e.matches) {
+        setDarkMode()
+    } else {
+        setLightMode()
+    }
+    console.log('changed')
+})
 
 let lastFuncName, lastCode, lastGcflags;
 function build() {
@@ -98,7 +112,7 @@ function build() {
         return
     }
     if (!findSSAFunc(code, funcname)) {
-        setMessageBox('GOFUNCNAME does not exist in your code.', false)
+        setMessageBox('GOSSAFUNC does not exist in your code.', false)
         return
     }
 
@@ -232,32 +246,4 @@ function loadCode() {
 }
 loadCode() // load content if access with id
 
-Split(['#snippet', '#output'], {
-    sizes: [30, 70],
-})
-
-// TODO: dragable scroll
-// let wholePage = document.querySelector('body');
-// let el = document.querySelector("#ssa").contentDocument.querySelector('body');
-// let x = 0, y = 0, t = 0, l = 0;
-// console.log(el);
-
-// let draggingFunction = (e) => {
-//     wholePage.addEventListener('mouseup', () => {
-//         wholePage.removeEventListener("mousemove", draggingFunction);
-//     });
-
-//     el.scrollLeft = l - e.pageX + x;
-//     el.scrollTop = t - e.pageY + y;
-// };
-
-// wholePage.addEventListener('click', (e) => {
-//     console.log("xxx")
-
-//     y = e.pageY;
-//     x = e.pageX;
-//     t = el.scrollTop;
-//     l = el.scrollLeft;
-
-//     el.addEventListener('mousemove', draggingFunction);
-// });
+Split(['#snippet', '#output'], { sizes: [30, 70] })
