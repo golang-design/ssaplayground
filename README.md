@@ -1,7 +1,5 @@
 # The Go SSA Playground
 
-[![go-recipes](https://raw.githubusercontent.com/nikolaydubina/go-recipes/main/badge.svg?raw=true)](https://github.com/nikolaydubina/go-recipes)
-
 https://golang.design/gossa
 
 A tool for exploring Go's SSA intermediate representation.
