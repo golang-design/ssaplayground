@@ -6,10 +6,10 @@ all: clean
 build:
 	docker build -t $(NAME):latest -f docker/Dockerfile .
 up:
-	docker-compose -f docker/deploy.yml up -d
+	docker compose -f docker/deploy.yml up -d
 down:
-	docker-compose -f docker/deploy.yml down
+	docker compose -f docker/deploy.yml down
 clean: down
 	rm -rf $(NAME)
-	docker rmi -f $(shell docker images -f "dangling=true" -q) 2> /dev/null; true
-	docker rmi -f $(NAME):latest $(NAME):$(VERSION) 2> /dev/null; true
+	docker image prune -f 2> /dev/null; true
+	docker image rm -f $(NAME):latest $(NAME):$(VERSION) 2> /dev/null; true
