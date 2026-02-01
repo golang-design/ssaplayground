@@ -3,7 +3,7 @@
 # by a GPLv3 license that can be found in the LICENSE file.
 
 # Build stage
-FROM golang:1.22-alpine AS builder
+FROM golang:1.25-alpine AS builder
 RUN apk add --no-cache gcc musl-dev
 WORKDIR /app
 ADD . /app
