@@ -47,6 +47,10 @@ func Run() {
 		terminated <- true
 	}()
 
+	// Periodically reclaim disk space by removing stale build folders.
+	// See https://github.com/golang-design/ssaplayground/issues/21
+	go route.StartBuildboxCleanup()
+
 	log.Printf("welcome to ssaplayground service... http://%s/gossa", config.Get().Addr)
 	err := server.ListenAndServe()
 	if err != http.ErrServerClosed {
