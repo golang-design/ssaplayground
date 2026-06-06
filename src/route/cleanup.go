@@ -19,10 +19,10 @@ const (
 	cleanInterval = time.Hour
 	// buildboxMaxAge is the maximum age a build folder is kept around.
 	// Builds are addressed by their UUID path, so this is effectively the
-	// lifetime of a shared link. A monthly sweep keeps the disk usage in
+	// lifetime of a shared link. A yearly horizon keeps the disk usage in
 	// check while preserving recently created or bookmarked builds.
 	// See https://github.com/golang-design/ssaplayground/issues/21
-	buildboxMaxAge = 30 * 24 * time.Hour
+	buildboxMaxAge = 365 * 24 * time.Hour
 )
 
 // StartBuildboxCleanup periodically removes stale build folders so that the
