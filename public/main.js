@@ -217,10 +217,34 @@ $('#code').keydown(function(event){
     }
 });
 
+// defaultCode is a representative Hello World example so first-time
+// visitors can build SSA immediately without writing any code.
+const defaultCode = `package main
+
+import "fmt"
+
+func main() {
+	for i := 0; i < 3; i++ {
+		fmt.Println("Hello, SSA!")
+	}
+}
+`
+
 function loadCode() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
-    if (id === null || id === undefined || id === '') { return; }
+    if (id === null || id === undefined || id === '') {
+        // No shared snippet in the URL: preload the default example and
+        // target GOSSAFUNC=main so users can hit Build right away.
+        if (code.value.trim() === '') {
+            code.value = defaultCode
+            $(code).scroll() // refresh the line numbers
+            if (funcname.value === '') {
+                funcname.value = 'main'
+            }
+        }
+        return;
+    }
     ssabox.src = `/gossa/buildbox/${id}/ssa.html`
     // load code
     fetch(`/gossa/buildbox/${id}/main.go`)
