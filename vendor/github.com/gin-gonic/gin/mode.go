@@ -8,6 +8,7 @@ import (
 	"flag"
 	"io"
 	"os"
+	"sync/atomic"
 
 	"github.com/gin-gonic/gin/binding"
 )
@@ -35,16 +36,17 @@ const (
 // Note that both Logger and Recovery provides custom ways to configure their
 // output io.Writer.
 // To support coloring in Windows use:
-// 		import "github.com/mattn/go-colorable"
-// 		gin.DefaultWriter = colorable.NewColorableStdout()
+//
+//	import "github.com/mattn/go-colorable"
+//	gin.DefaultWriter = colorable.NewColorableStdout()
 var DefaultWriter io.Writer = os.Stdout
 
 // DefaultErrorWriter is the default io.Writer used by Gin to debug errors
 var DefaultErrorWriter io.Writer = os.Stderr
 
 var (
-	ginMode  = debugCode
-	modeName = DebugMode
+	ginMode  int32 = debugCode
+	modeName atomic.Value
 )
 
 func init() {
@@ -64,16 +66,15 @@ func SetMode(value string) {
 
 	switch value {
 	case DebugMode:
-		ginMode = debugCode
+		atomic.StoreInt32(&ginMode, debugCode)
 	case ReleaseMode:
-		ginMode = releaseCode
+		atomic.StoreInt32(&ginMode, releaseCode)
 	case TestMode:
-		ginMode = testCode
+		atomic.StoreInt32(&ginMode, testCode)
 	default:
 		panic("gin mode unknown: " + value + " (available mode: debug release test)")
 	}
-
-	modeName = value
+	modeName.Store(value)
 }
 
 // DisableBindValidation closes the default validator.
@@ -95,5 +96,5 @@ func EnableJsonDecoderDisallowUnknownFields() {
 
 // Mode returns current gin mode.
 func Mode() string {
-	return modeName
+	return modeName.Load().(string)
 }

@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/gin-gonic/gin/internal/json"
+	"github.com/gin-gonic/gin/codec/json"
 )
 
 // ErrorType is an unsigned 64-bit error code as defined in the gin spec.
@@ -26,8 +26,6 @@ const (
 	ErrorTypePublic ErrorType = 1 << 1
 	// ErrorTypeAny indicates any other error.
 	ErrorTypeAny ErrorType = 1<<64 - 1
-	// ErrorTypeNu indicates any other error.
-	ErrorTypeNu = 2
 )
 
 // Error represents a error's specification.
@@ -39,7 +37,7 @@ type Error struct {
 
 type errorMsgs []*Error
 
-var _ error = &Error{}
+var _ error = (*Error)(nil)
 
 // SetType sets the error's type.
 func (msg *Error) SetType(flags ErrorType) *Error {
@@ -77,7 +75,7 @@ func (msg *Error) JSON() any {
 
 // MarshalJSON implements the json.Marshaller interface.
 func (msg *Error) MarshalJSON() ([]byte, error) {
-	return json.Marshal(msg.JSON())
+	return json.API.Marshal(msg.JSON())
 }
 
 // Error implements the error interface.
@@ -91,7 +89,7 @@ func (msg *Error) IsType(flags ErrorType) bool {
 }
 
 // Unwrap returns the wrapped error, to allow interoperability with errors.Is(), errors.As() and errors.Unwrap()
-func (msg *Error) Unwrap() error {
+func (msg Error) Unwrap() error {
 	return msg.Err
 }
 
@@ -124,10 +122,11 @@ func (a errorMsgs) Last() *Error {
 
 // Errors returns an array with all the error messages.
 // Example:
-// 		c.Error(errors.New("first"))
-// 		c.Error(errors.New("second"))
-// 		c.Error(errors.New("third"))
-// 		c.Errors.Errors() // == []string{"first", "second", "third"}
+//
+//	c.Error(errors.New("first"))
+//	c.Error(errors.New("second"))
+//	c.Error(errors.New("third"))
+//	c.Errors.Errors() // == []string{"first", "second", "third"}
 func (a errorMsgs) Errors() []string {
 	if len(a) == 0 {
 		return nil
@@ -156,7 +155,7 @@ func (a errorMsgs) JSON() any {
 
 // MarshalJSON implements the json.Marshaller interface.
 func (a errorMsgs) MarshalJSON() ([]byte, error) {
-	return json.Marshal(a.JSON())
+	return json.API.Marshal(a.JSON())
 }
 
 func (a errorMsgs) String() string {
